@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+
+    <changeSet id="1" author="lkarion">
+        <!--        CREATOR-->
+        <createTable tableName="creator">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <!--        CREATOR_PASSWORD-->
+        <createTable tableName="creator_password">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="salt" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password_hash" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creator_id" type="bigint">
+                <constraints nullable="false"
+                             unique="true"
+                             referencedTableName="creator"
+                             referencedColumnNames="id"
+                             foreignKeyName="CREATOR_ID_CREATOR_PASSWORD_CREATOR_ID"/>
+            </column>
+        </createTable>
+
+        <!--        CREATOR_SESSION-->
+        <createTable tableName="creator_session">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="session_id" type="varchar(255)">
+                <constraints unique="true"
+                             nullable="false"/>
+            </column>
+            <column name="expiration_time" type="time"/>
+            <column name="creator_id" type="bigint">
+                <constraints nullable="false"
+                             referencedTableName="creator"
+                             referencedColumnNames="id"
+                             foreignKeyName="CREATOR_ID_CREATOR_SESSION_CREATOR_ID"/>
+            </column>
+        </createTable>
+        <!--        TASK-->
+        <createTable tableName="task">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="title" type="varchar(255)">
+                <constraints unique="true"
+                             nullable="false"/>
+            </column>
+            <column name="is_done" type="boolean"/>
+            <column name="creator_id" type="bigint">
+                <constraints nullable="false"
+                             referencedTableName="creator"
+                             referencedColumnNames="id"
+                             foreignKeyName="CREATOR_ID_TASK_CREATOR_ID"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+</databaseChangeLog>
